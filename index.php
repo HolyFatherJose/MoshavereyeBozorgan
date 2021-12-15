@@ -84,10 +84,10 @@ else
             را از
             <select name="person">
                 <?php
-                echo "<option value = $en_name>$fa_name</option>";
                 foreach($name_list as $english => $farsi)
                 {
-                    if($english != $en_name) echo "<option value = $english>$farsi</option>";
+                    if($english == $en_name) echo "<option value = $english selected>$farsi</option>";
+                    else echo "<option value = $english>$farsi</option>";
                 }
                 ?>
             </select>
