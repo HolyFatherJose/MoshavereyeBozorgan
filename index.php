@@ -3,12 +3,24 @@ $json_entry = file_get_contents("people.json");
 $name_list = json_decode($json_entry, TRUE);
 $msg_list = file("messages.txt");
 
-$en_name = $_POST["person"];
-$fa_name = $name_list[$en_name];
+if(!empty($_POST["person"]))
+{
+    $en_name = $_POST["person"];
+    $fa_name = $name_list[$en_name];
 
-$question = $_POST["question"];
-$msg_tag = ((int) sha1($en_name.$question))%16;
-$msg = $msg_list[$msg_tag];
+    $question = $_POST["question"];
+    $msg_tag = ((int) sha1($en_name.$question)) % (count($msg_list));
+    $msg = $msg_list[$msg_tag];
+}
+else
+{
+    $en_name = "abooreyhan";
+    $fa_name = $name_list[$en_name];
+
+    $question = "";
+    $msg_tag = ((int) sha1($en_name.$question)) % (count($msg_list));
+    $msg = $msg_list[$msg_tag];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +46,7 @@ $msg = $msg_list[$msg_tag];
     </div>
     <div id="container">
         <div id="message">
-            <p>
+            <p style= "font-size: 430%">
                 <?php
                 if(!empty($question)) echo $msg;
                 else echo "سوال خود را بپرس!";
