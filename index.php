@@ -5,21 +5,22 @@ $msg_list = file("messages.txt");
 
 if(!empty($_POST["person"]))
 {
+    error_reporting(0);
+
     $en_name = $_POST["person"];
     $fa_name = $name_list[$en_name];
 
     $question = $_POST["question"];
-    $msg_tag = ((int) sha1($en_name.$question)) % (count($msg_list));
-    $msg = $msg_list[$msg_tag];
+    $q_last = strlen($question) - 1;
+    
+    $msg_tag =((int) sha1($question.$fa_name));
+    $msg = $msg_list[$msg_tag % count($msg_list)];
 }
 else
 {
     $en_name = "abooreyhan";
     $fa_name = $name_list[$en_name];
-
     $question = "";
-    $msg_tag = ((int) sha1($en_name.$question)) % (count($msg_list));
-    $msg = $msg_list[$msg_tag];
 }
 ?>
 <!DOCTYPE html>
@@ -35,12 +36,18 @@ else
     <div id="title">
         <span id="label">
             <?php
-            if(!empty($question)) echo "پرسش:";
+            if( (!empty($question)) and str_starts_with($question, "آیا") and (str_ends_with($question, "?") or str_ends_with($question, "؟")) )
+            {
+                echo "پرسش:";
+            }
             ?>
         </span>
         <span id="question">
             <?php
-            if(!empty($question)) echo $question;
+            if( (!empty($question)) and str_starts_with($question, "آیا") and (str_ends_with($question, "?") or str_ends_with($question, "؟")) )
+            {
+                echo $question;
+            }
             ?>
         </span>
     </div>
@@ -48,7 +55,17 @@ else
         <div id="message">
             <p style= "font-size: 430%">
                 <?php
-                if(!empty($question)) echo $msg;
+                if(!empty($question))
+                {
+                    if( str_starts_with($question, "آیا") and (str_ends_with($question, "?") or str_ends_with($question, "؟")) )
+                    {
+                        echo $msg;
+                    }
+                    else
+                    {
+                        echo "سوال درستی پرسیده نشده";
+                    }
+                }
                 else echo "سوال خود را بپرس!";
                 ?>
             </p>
